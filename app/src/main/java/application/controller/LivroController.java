@@ -22,18 +22,19 @@ public class LivroController {
     @RequestMapping("/livro")
     public String list(Model model) {
         model.addAttribute("livros", livroRepo.findAll());
-        return "WEB-INF/list.jsp";
+        return "WEB-INF/livro/list.jsp";
     }
 
     @RequestMapping("/insert")
     public String insert() {
-        return "WEB-INF/insert.jsp";
+        return "WEB-INF/livro/insert.jsp";
     }
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    public String insert(@RequestParam("titulo") String titulo) {
+    public String insert(@RequestParam("titulo") String titulo , @RequestParam("titulo") String isbn) {
         Livro livro = new Livro();
         livro.setTitulo(titulo);
+        livro.setIsbn(isbn);
 
         livroRepo.save(livro);
 
@@ -49,12 +50,13 @@ public class LivroController {
         }
 
         model.addAttribute("livro", livro.get());
-        return "WEB-INF/update.jsp";
+        return "WEB-INF/livro/update.jsp";
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String update(
         @RequestParam("titulo") String titulo,
+        @RequestParam("isbn") String isbn,
         @RequestParam("id") int id
     ) {
         Optional<Livro> livro = livroRepo.findById(id);
@@ -63,6 +65,7 @@ public class LivroController {
         }
 
         livro.get().setTitulo(titulo);
+        livro.get().setIsbn(isbn);
 
         livroRepo.save(livro.get());
         return "redirect:/livro";
@@ -77,7 +80,7 @@ public class LivroController {
         }
 
         model.addAttribute("livro", livro.get());
-        return "WEB-INF/delete.jsp";
+        return "WEB-INF/livro/delete.jsp";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
